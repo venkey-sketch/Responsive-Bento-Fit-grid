@@ -1,0 +1,6 @@
+{
+  "name": "Responsive Bento Grid Dashboard",
+  "description": "A high-performance responsive Bento Grid dashboard built with semantic HTML5 and modern CSS Grid and Flexbox.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

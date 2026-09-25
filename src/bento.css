@@ -1,0 +1,235 @@
+/**
+ * BENTO GRID RESPONSIVE STYLESHEET
+ * Pure CSS Grid and Flexbox architecture matching:
+ * - Desktop Layout Reference (4-column multi-span Bento Grid)
+ * - Mobile Layout Reference (1-column prioritized flow via CSS order)
+ * No JavaScript required for grid layout or responsiveness.
+ */
+
+:root {
+  /* Font Family Definitions */
+  --font-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Theme: Fitness / Kinetic Bio-Lab */
+  --bg-canvas: #07090e;
+  --bg-card: #0e131f;
+  --bg-card-subtle: #141b2d;
+  --border-card: rgba(255, 255, 255, 0.08);
+  --border-card-hover: rgba(16, 185, 129, 0.35);
+  --accent-primary: #10b981;
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --accent-secondary: #06b6d4;
+  --accent-warm: #f59e0b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --radius-card: 20px;
+  --radius-inner: 12px;
+}
+
+/* Alternate Theme: Gamer / Valkyrie Apex */
+[data-theme='gamer'] {
+  --bg-canvas: #090714;
+  --bg-card: #120e24;
+  --bg-card-subtle: #1c1538;
+  --border-card: rgba(255, 255, 255, 0.09);
+  --border-card-hover: rgba(168, 85, 247, 0.45);
+  --accent-primary: #a855f7;
+  --accent-glow: rgba(168, 85, 247, 0.18);
+  --accent-secondary: #ec4899;
+  --accent-warm: #38bdf8;
+  --text-main: #faf5ff;
+  --text-muted: #cbd5e1;
+  --text-dim: #64748b;
+}
+
+/* Base Bento Container */
+.bento-container {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+/* CSS Grid Definition */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* Base Bento Card Style */
+.bento-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-card-hover);
+  box-shadow: 0 12px 30px -10px var(--accent-glow);
+}
+
+/* Highlight / Hero Card Styling */
+.bento-card-hero {
+  background: radial-gradient(circle at top right, var(--bg-card-subtle) 0%, var(--bg-card) 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Tabular Numerals for metrics */
+.num-tabular {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   RESPONSIVE LAYOUT ENGINE (CSS Grid Lines & Spans)
+   ========================================================================= */
+
+/* Desktop Breakpoint: >= 1024px */
+/* Exact 4-column x 3-row Bento Grid geometry from Desktop Reference */
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    gap: 1.5rem;
+  }
+
+  /* Card 1: Left Tall (Column 1, Rows 1 to 2) */
+  .bento-item-1 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+  }
+
+  /* Card 2: Center Hero (Columns 2 & 3, Row 1) */
+  .bento-item-2 {
+    grid-column: 2 / 4;
+    grid-row: 1 / 2;
+  }
+
+  /* Card 3: Right Tall (Column 4, Rows 1 to 2) */
+  .bento-item-3 {
+    grid-column: 4 / 5;
+    grid-row: 1 / 3;
+  }
+
+  /* Card 5: Middle Left (Column 2, Row 2) */
+  .bento-item-5 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  /* Card 6: Middle Right (Column 3, Row 2) */
+  .bento-item-6 {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+  }
+
+  /* Card 4: Left Bottom (Column 1, Row 3) */
+  .bento-item-4 {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+  }
+
+  /* Card 7: Bottom Middle 1 (Column 2, Row 3) */
+  .bento-item-7 {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
+
+  /* Card 8: Bottom Wide (Columns 3 & 4, Row 3) */
+  .bento-item-8 {
+    grid-column: 3 / 5;
+    grid-row: 3 / 4;
+  }
+}
+
+/* Tablet Breakpoint: 640px to 1023px */
+/* Balanced 2-column Grid */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .bento-item-2 {
+    grid-column: 1 / 3; /* Hero card spans across full 2 cols on tablet */
+  }
+
+  .bento-item-1 {
+    grid-column: 1 / 2;
+  }
+
+  .bento-item-3 {
+    grid-column: 2 / 3;
+  }
+
+  .bento-item-5 {
+    grid-column: 1 / 2;
+  }
+
+  .bento-item-6 {
+    grid-column: 2 / 3;
+  }
+
+  .bento-item-7 {
+    grid-column: 1 / 2;
+  }
+
+  .bento-item-4 {
+    grid-column: 2 / 3;
+  }
+
+  .bento-item-8 {
+    grid-column: 1 / 3; /* Bottom wide card spans 2 cols */
+  }
+}
+
+/* Mobile Breakpoint: < 640px */
+/* 1-column Stack with visual priority re-ordering matching Mobile Reference */
+@media (max-width: 639px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Order matching user mobile experience hierarchy */
+  .bento-item-2 { order: 1; } /* Hero Main Card first */
+  .bento-item-5 { order: 2; } /* Multi-device sync */
+  .bento-item-6 { order: 3; } /* Zone consistency */
+  .bento-item-3 { order: 4; } /* Circadian sleep timeline */
+  .bento-item-8 { order: 5; } /* Milestone PR streaks */
+  .bento-item-7 { order: 6; } /* +68.4% metric */
+  .bento-item-1 { order: 7; } /* Adaptive overload tracking */
+  .bento-item-4 { order: 8; } /* AI nutrition loading */
+}
+
+/* Interactive SVG Micro-Chart Utilities */
+.chart-grid-line {
+  stroke: rgba(255, 255, 255, 0.07);
+  stroke-dasharray: 4 4;
+}
+
+.glow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

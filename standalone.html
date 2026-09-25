@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinetic Bio-Lab — Responsive Bento Grid (HTML & CSS)</title>
+  <meta name="description" content="A responsive Bento Grid dashboard built strictly with semantic HTML5 and modern CSS Grid & Flexbox (no JavaScript).">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================================
+       RESET & ROOT VARIABLES
+       ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --font-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --bg-canvas: #07090e;
+      --bg-card: #0e131f;
+      --bg-card-subtle: #141b2d;
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-card-hover: rgba(16, 185, 129, 0.35);
+      --accent-primary: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --accent-secondary: #06b6d4;
+      --accent-warm: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-card: 20px;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 4rem;
+    }
+
+    /* =========================================================================
+       HEADER CONTRACT (3 Zones: Brand, Nav, Action)
+       ========================================================================= */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background-color: rgba(7, 9, 14, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1rem 1.5rem;
+    }
+
+    .header-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-primary);
+    }
+
+    nav {
+      display: none;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      nav {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent-primary);
+    }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .header-cta:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* =========================================================================
+       HERO INTRO SECTION
+       ========================================================================= */
+    .hero-intro {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .kicker {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-intro h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-intro p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 680px;
+    }
+
+    /* =========================================================================
+       BENTO GRID CONTAINER & TILES
+       ========================================================================= */
+    .bento-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      width: 100%;
+    }
+
+    .bento-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-card-hover);
+      box-shadow: 0 12px 30px -10px var(--accent-glow);
+    }
+
+    .card-kicker {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .num-tabular {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* =========================================================================
+       DESKTOP BENTO GRID LAYOUT (min-width: 1024px)
+       4 Columns x 3 Rows (Matches Desktop Reference)
+       ========================================================================= */
+    @media (min-width: 1024px) {
+      .bento-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto auto auto;
+        gap: 1.5rem;
+      }
+
+      /* Card 1: Left Tall (Column 1, Rows 1-2) */
+      .card-1 {
+        grid-column: 1 / 2;
+        grid-row: 1 / 3;
+      }
+
+      /* Card 2: Center Hero (Columns 2-3, Row 1) */
+      .card-2 {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+        background: radial-gradient(circle at top right, var(--bg-card-subtle) 0%, var(--bg-card) 100%);
+      }
+
+      /* Card 3: Right Tall (Column 4, Rows 1-2) */
+      .card-3 {
+        grid-column: 4 / 5;
+        grid-row: 1 / 3;
+      }
+
+      /* Card 5: Middle Left (Column 2, Row 2) */
+      .card-5 {
+        grid-column: 2 / 3;
+        grid-row: 2 / 3;
+      }
+
+      /* Card 6: Middle Right (Column 3, Row 2) */
+      .card-6 {
+        grid-column: 3 / 4;
+        grid-row: 2 / 3;
+      }
+
+      /* Card 4: Left Bottom (Column 1, Row 3) */
+      .card-4 {
+        grid-column: 1 / 2;
+        grid-row: 3 / 4;
+      }
+
+      /* Card 7: Bottom Middle 1 (Column 2, Row 3) */
+      .card-7 {
+        grid-column: 2 / 3;
+        grid-row: 3 / 4;
+      }
+
+      /* Card 8: Bottom Wide (Columns 3-4, Row 3) */
+      .card-8 {
+        grid-column: 3 / 5;
+        grid-row: 3 / 4;
+      }
+    }
+
+    /* =========================================================================
+       TABLET BENTO GRID LAYOUT (640px to 1023px)
+       2 Columns
+       ========================================================================= */
+    @media (min-width: 640px) and (max-width: 1023px) {
+      .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .card-2 { grid-column: 1 / 3; }
+      .card-1 { grid-column: 1 / 2; }
+      .card-3 { grid-column: 2 / 3; }
+      .card-5 { grid-column: 1 / 2; }
+      .card-6 { grid-column: 2 / 3; }
+      .card-7 { grid-column: 1 / 2; }
+      .card-4 { grid-column: 2 / 3; }
+      .card-8 { grid-column: 1 / 3; }
+    }
+
+    /* =========================================================================
+       MOBILE BENTO GRID ORDER (< 640px)
+       Matches Mobile Layout Reference
+       ========================================================================= */
+    @media (max-width: 639px) {
+      .card-2 { order: 1; } /* Hero showcase */
+      .card-5 { order: 2; } /* Multi-device sync */
+      .card-6 { order: 3; } /* Zone consistency */
+      .card-3 { order: 4; } /* Circadian sleep timeline */
+      .card-8 { order: 5; } /* Milestone PR streaks */
+      .card-7 { order: 6; } /* +68.4% metric */
+      .card-1 { order: 7; } /* Adaptive overload */
+      .card-4 { order: 8; } /* Macro fueling */
+    }
+
+    /* Visual Components & Micro-Charts */
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 0.35rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent-primary);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6875rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar Contract -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="brand-mark">
+        <span class="brand-dot"></span>
+        <span>KINETIC BIO-LAB</span>
+      </a>
+
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#biometrics">Biometrics</a>
+        <a href="#endurance">Endurance</a>
+        <a href="#strength">Strength</a>
+        <a href="#recovery">Recovery</a>
+      </nav>
+
+      <a href="https://github.com" target="_blank" class="header-cta">
+        GitHub Source
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Intro -->
+  <section class="hero-intro">
+    <div class="kicker">ATHLETE BIOMETRIC OS · v2026 CALIBRATION</div>
+    <h1>High-Performance Human Velocity &amp; Autonomous Recovery</h1>
+    <p>Calibrated multi-channel telemetry engine tracking aerobic threshold, progressive overload, and autonomic circadian sleep architecture.</p>
+  </section>
+
+  <!-- Bento Grid -->
+  <main class="bento-container">
+    <div class="bento-grid">
+
+      <!-- CARD 2: CENTER HERO (Col 2-3, Row 1 on Desktop) -->
+      <article class="bento-card card-2">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="card-kicker" style="color: var(--accent-primary);">AEROBIC ENGINE · PRIMARY METRIC</span>
+            <span class="badge">Top 1% Elite Tier</span>
+          </div>
+
+          <h2 class="card-title" style="font-size: clamp(1.4rem, 2.5vw, 1.85rem);">
+            Peak VO2 Max &amp; Aerobic Velocity 10x Faster
+          </h2>
+
+          <p class="card-desc" style="max-width: 520px; margin-bottom: 1.25rem;">
+            Sustained sub-threshold pacing with continuous lactate monitoring. High-efficiency respiratory quotient calibrated across 14 weekly endurance blocks.
+          </p>
+
+          <!-- SVG Chart -->
+          <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.5rem;">
+              <span style="color: var(--text-muted);">VO2 Max Progression Curve</span>
+              <span class="num-tabular" style="font-weight: 700; color: #fff;">59.4 mL/kg/min</span>
+            </div>
+
+            <svg viewBox="0 0 400 90" style="width: 100%; height: 90px; overflow: visible;">
+              <defs>
+                <linearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
+              <line x1="0" y1="50" x2="400" y2="50" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3"/>
+              <path d="M 0 75 Q 80 65 140 45 T 260 30 T 360 15 L 400 10 L 400 90 L 0 90 Z" fill="url(#grad2)"/>
+              <path d="M 0 75 Q 80 65 140 45 T 260 30 T 360 15 L 400 10" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="400" cy="10" r="4.5" fill="#fff" stroke="#10b981" stroke-width="2.5"/>
+            </svg>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+              <span>Baseline: 46.2 mL</span>
+              <span style="color: var(--accent-primary); font-weight: 600;">+28.5% Growth</span>
+              <span>Peak: 59.4 mL</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; font-size: 0.75rem; color: var(--text-muted);">
+          <span>★★★★★ 5.0 Biometric Reliability</span>
+          <span class="num-tabular" style="font-size: 0.6875rem;">48,200 km endurance logged</span>
+        </div>
+      </article>
+
+      <!-- CARD 1: LEFT TALL (Col 1, Rows 1-2 on Desktop) -->
+      <article class="bento-card card-1">
+        <div>
+          <span class="card-kicker">STRENGTH PROTOCOL</span>
+          <h3 class="card-title">Adaptive Progressive Overload Cycles</h3>
+          <p class="card-desc" style="margin-bottom: 1.5rem;">
+            Micro-loading algorithms calibrated against mechanical bar velocity to prevent overtraining.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono);">
+                <span>Back Squat</span>
+                <span style="color: var(--accent-primary); font-weight: 700;">415 lbs (+15)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 92%;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono);">
+                <span>Deadlift</span>
+                <span style="color: var(--accent-primary); font-weight: 700;">495 lbs (+20)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 96%;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono);">
+                <span>Bench Press</span>
+                <span style="color: var(--accent-primary); font-weight: 700;">315 lbs (+10)</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted);">
+          <span>Strength Delta</span>
+          <span style="color: #fff; font-weight: 600;">+14.2% Meso</span>
+        </div>
+      </article>
+
+      <!-- CARD 3: RIGHT TALL (Col 4, Rows 1-2 on Desktop) -->
+      <article class="bento-card card-3">
+        <div>
+          <span class="card-kicker" style="color: var(--accent-secondary);">CIRCADIAN RECOVERY</span>
+          <h3 class="card-title">Autonomous HRV &amp; Sleep Architecture</h3>
+          <p class="card-desc" style="margin-bottom: 1rem;">
+            Deep restorative REM and slow-wave sleep cycles ensure neuromuscular readiness for maximal efforts.
+          </p>
+
+          <!-- Circular Score Dial -->
+          <div style="display: flex; justify-content: center; margin: 1rem 0;">
+            <div style="position: relative; width: 110px; height: 110px; display: flex; align-items: center; justify-content: center;">
+              <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
+                <circle cx="50" cy="50" r="40" stroke="#06b6d4" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="15" stroke-linecap="round" fill="none"/>
+              </svg>
+              <div style="position: absolute; text-align: center;">
+                <span class="num-tabular" style="font-size: 1.5rem; font-weight: 800; color: #fff; display: block; line-height: 1;">96%</span>
+                <span style="font-size: 0.625rem; text-transform: uppercase; color: var(--text-muted);">Recovery</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem; font-family: var(--font-mono);">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Deep Slow-Wave</span>
+              <span style="color: #fff; font-weight: 600;">2h 18m</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">REM Sleep</span>
+              <span style="color: #fff; font-weight: 600;">2h 05m</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Resting Heart Rate</span>
+              <span style="color: #fff; font-weight: 600;">44 bpm</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted);">
+          HRV Readiness: 86 ms (+14ms)
+        </div>
+      </article>
+
+      <!-- CARD 5: MIDDLE LEFT (Col 2, Row 2 on Desktop) -->
+      <article class="bento-card card-5">
+        <div>
+          <span class="card-kicker">HARDWARE SYNC</span>
+          <h3 class="card-title">Unified Biometric Sync</h3>
+          <p class="card-desc">
+            Real-time telemetry pipeline from continuous health monitors.
+          </p>
+
+          <div style="margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.04); border-radius: 8px;">
+              <span>Apple Watch Ultra</span>
+              <span style="color: var(--accent-primary);">Online</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.04); border-radius: 8px;">
+              <span>WHOOP 4.0 Strap</span>
+              <span style="color: var(--accent-primary);">Synced</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono);">
+          <span>Latency: 1.2ms</span>
+          <span style="color: var(--accent-primary);">100% Signal</span>
+        </div>
+      </article>
+
+      <!-- CARD 6: MIDDLE RIGHT (Col 3, Row 2 on Desktop) -->
+      <article class="bento-card card-6">
+        <div>
+          <span class="card-kicker">TRAINING POLARITY</span>
+          <h3 class="card-title">Maintain Training Zones</h3>
+          <p class="card-desc">
+            Strict 80/20 polarized distribution across Zone 2 and Zone 5.
+          </p>
+
+          <div style="margin: 1rem 0; display: flex; flex-direction: column; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">Zone 2 (Aerobic Base)</span>
+                <span>68% / 70%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 88%;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; margin-bottom: 0.25rem;">
+                <span style="color: var(--text-muted);">Zone 5 (Max VO2)</span>
+                <span>12% / 15%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 80%; background: var(--accent-warm);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono);">
+          <span>Weekly Compliance</span>
+          <span style="color: var(--accent-primary); font-weight: 600;">94.8% Adherence</span>
+        </div>
+      </article>
+
+      <!-- CARD 4: LEFT BOTTOM (Col 1, Row 3 on Desktop) -->
+      <article class="bento-card card-4">
+        <div>
+          <span class="card-kicker">PRECISION FUELING</span>
+          <h3 class="card-title">Targeted Nutrient Synthesis</h3>
+          <p class="card-desc">
+            Automated carbohydrate loading based on session exertion.
+          </p>
+
+          <div style="margin: 1rem 0; padding: 0.75rem; background: rgba(255,255,255,0.04); border-radius: 12px; font-family: var(--font-mono); font-size: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <span style="color: var(--text-muted);">Daily Energy</span>
+              <span style="color: var(--accent-primary); font-weight: 700;">3,450 kcal</span>
+            </div>
+            <div style="display: flex; height: 6px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,0.1);">
+              <div style="width: 45%; background: var(--accent-primary);"></div>
+              <div style="width: 35%; background: var(--accent-secondary);"></div>
+              <div style="width: 20%; background: var(--accent-warm);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.625rem; color: var(--text-muted); margin-top: 0.5rem;">
+              <span>195g Protein</span>
+              <span>340g Carbs</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; color: var(--text-muted); font-family: var(--font-mono);">
+          <span>Hydration: 3.8 L</span>
+          <span style="color: #fff;">Optimal</span>
+        </div>
+      </article>
+
+      <!-- CARD 7: BOTTOM MIDDLE 1 (Col 2, Row 3 on Desktop) -->
+      <article class="bento-card card-7">
+        <div>
+          <span class="card-kicker" style="color: var(--accent-primary);">EFFICIENCY DELTA</span>
+          
+          <div class="num-tabular" style="font-size: clamp(2.5rem, 5vw, 3.25rem); font-weight: 800; color: #fff; line-height: 1; margin: 0.5rem 0;">
+            +68.4%
+          </div>
+
+          <h3 class="card-title" style="font-size: 1.05rem;">Faster Lactate Clearance Rate</h3>
+          <p class="card-desc">
+            Sub-threshold recovery intervals sustain peak aerobic turnover without systemic fatigue.
+          </p>
+        </div>
+
+        <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; font-size: 0.6875rem; font-family: var(--font-mono); color: var(--text-muted);">
+          <span>Threshold: 4.0 mmol</span>
+          <span style="color: var(--accent-primary); font-weight: 600;">+18% MoM</span>
+        </div>
+      </article>
+
+      <!-- CARD 8: BOTTOM WIDE (Col 3-4, Row 3 on Desktop) -->
+      <article class="bento-card card-8">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+            <div>
+              <span class="card-kicker" style="color: var(--accent-warm);">MILESTONE STREAKS</span>
+              <h3 class="card-title">Accelerate Milestones with Continuous Biofeedback</h3>
+              <p class="card-desc" style="max-width: 360px;">
+                Continuous feedback loops prevent plateauing and compound athletic gains over seasonal training phases.
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <div style="padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 12px; text-align: center; font-family: var(--font-mono);">
+                <span class="num-tabular" style="font-size: 1.25rem; font-weight: 700; color: #fff; display: block; line-height: 1;">14</span>
+                <span style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase;">PRs Broken</span>
+              </div>
+              <div style="padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 12px; text-align: center; font-family: var(--font-mono);">
+                <span class="num-tabular" style="font-size: 1.25rem; font-weight: 700; color: var(--accent-primary); display: block; line-height: 1;">28d</span>
+                <span style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase;">Streak</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08);">
+          <div style="display: flex; justify-content: space-between; font-size: 0.6875rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.35rem;">
+            <span>Seasonal Endurance Block (Q1)</span>
+            <span style="color: var(--accent-primary); font-weight: 600;">92% Completed</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 92%; background: linear-gradient(90deg, #10b981, #06b6d4);"></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <footer style="margin-top: 4rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem;">
+    Kinetic Bio-Lab &copy; 2026 · Pure HTML &amp; CSS Bento Grid · Zero JavaScript Dependency
+  </footer>
+
+</body>
+</html>
